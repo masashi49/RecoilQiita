@@ -1,6 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import styles from '../../styles/Home.module.css'
+import { TopPage } from '../../components/TopPage'
 
 const Home: NextPage = () => {
   return (
@@ -8,7 +9,7 @@ const Home: NextPage = () => {
       <Head>
         <title>Create Next App</title>
       </Head>
-
+      <TopPage />
     </div>
   )
 }
