@@ -1,16 +1,16 @@
-import { VFC,useState, useEffect } from 'react';
+import { VFC, useState, useEffect } from 'react';
 import axios from 'axios';
 import { resolve } from 'path';
 import { rejects } from 'assert';
 
 type Props = {
     initialUrl: string,
-    initialData:{hits:[]}
+    initialData: { hits: [] }
 }
 
 // データ取得専用のhookになった。
 export const useDataApi = ({ initialUrl }: Props) => {
-    const [data, setData] = useState({hits:[]});
+    const [data, setData] = useState({ hits: [] });
     const [url, setUrl] = useState(initialUrl)
     const [isLoading, setIsLodading] = useState(false)
     const [isError, setIsError] = useState(false)
@@ -42,25 +42,34 @@ export const useDataApi = ({ initialUrl }: Props) => {
     // }
     // awaitFunc()
 
-    const promiseFunc = (value:number) => {
+    const promiseFunc = (value: number) => {
         return new Promise((resolve, rejects) => {
             setTimeout(() => {
                 resolve(value * 2)
-            },1000)
+            }, 2000)
         })
     }
 
     async function asyncFunc() {
-        const a = await promiseFunc(1)
-        console.log(a)
-        const b = await promiseFunc(2)
-        console.log(b)
-        const c = await promiseFunc(3)
-        console.log(a)
-        return a + b * c;
+        // const a = await promiseFunc(1)
+        // console.log(a + '1111')
+        // const b = await promiseFunc(2)
+        // console.log(b + '2222')
+        // const c = await promiseFunc(3)
+        // console.log(c + '3333')
+
+        // 非同期処理をまとめて並列で行い、全部完了したら返す。
+        const values = await Promise.all([
+            promiseFunc(1),
+            promiseFunc(2),
+            promiseFunc(3)
+        ])
+        console.log(values)
+        return values
     }
 
     asyncFunc().then(value => {
+        console.log('4444')
         console.log(value)
     })
 
