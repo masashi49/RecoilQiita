@@ -3,19 +3,16 @@ import axios from 'axios';
 import { resolve } from 'path';
 import { rejects } from 'assert';
 
-type Props = {
-    initialUrl: string,
-    initialData: { hits: [] }
-}
 
 // データ取得専用のhookになった。
-export const useDataApi = ({ initialUrl }: Props) => {
-    const [data, setData] = useState({ hits: [] });
+export const useDataApi = (initialUrl: string, initialData: { hits: [] }) => {
+    const [data, setData] = useState(initialData);
     const [url, setUrl] = useState(initialUrl)
     const [isLoading, setIsLodading] = useState(false)
     const [isError, setIsError] = useState(false)
 
     useEffect(() => {
+        console.log(url)
         const fetchData = async () => {
             setIsError(false);
             setIsLodading(true)
@@ -28,6 +25,20 @@ export const useDataApi = ({ initialUrl }: Props) => {
             setIsLodading(false)
         }
         fetchData()
+        console.log("アンマウントされる！");
+
+        // これはクリーンアップ関数
+        return () => {
+
+            console.log("bye!");
+            run1sec();
+        };
+
+        function run1sec() {
+            console.log("run1sec ing....");
+            const start = performance.now();
+            while (performance.now() - start < 1000);
+        }
 
     }, [url])
 
@@ -68,10 +79,10 @@ export const useDataApi = ({ initialUrl }: Props) => {
         return values
     }
 
-    asyncFunc().then(value => {
-        console.log('4444')
-        console.log(value)
-    })
+    // asyncFunc().then(value => {
+    //     console.log('4444')
+    //     console.log(value)
+    // })
 
 
     // async function rejectFunc() {
