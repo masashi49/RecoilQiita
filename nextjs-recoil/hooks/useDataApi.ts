@@ -3,17 +3,20 @@ import axios from 'axios';
 import { resolve } from 'path';
 import { rejects } from 'assert';
 
+// actionの種類
 enum ActionType {
     FETCH_INIT = 'FETCH_INIT',
     FETCH_SUCCESS = 'FETCH_SUCCESS',
     FETCH_FAILURE = 'FETCH_FAILURE'
 }
 
+// actionでつかう型
 type RecucerActionType = {
     type: ActionType,
     payload: ReducerState,
 }
 
+// stateで使う型
 type ReducerState = {
     isLoading: boolean,
     isError: boolean,
