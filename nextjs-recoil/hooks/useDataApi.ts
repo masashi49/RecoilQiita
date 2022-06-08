@@ -1,8 +1,47 @@
-import { VFC, useState, useEffect } from 'react';
+import { VFC, useState, useEffect, useReducer } from 'react';
 import axios from 'axios';
 import { resolve } from 'path';
 import { rejects } from 'assert';
 
+enum ActionType {
+    FETCH_INIT = 'FETCH_INIT',
+    FETCH_SUCCESS = 'FETCH_SUCCESS',
+    FETCH_FAILURE = 'FETCH_FAILURE'
+}
+
+type RecucerActionType = {
+    type: ActionType,
+    payload: ReducerState,
+}
+
+type ReducerState = {
+    isLoading: boolean,
+    isError: boolean,
+    data: { hits: [] }
+}
+
+
+const fadaFetchReducer = (state: ReducerState, action: RecucerActionType) => {
+    switch (action.type) {
+        case ActionType.FETCH_INIT:
+            return {
+                ...state,
+                isLoading: true,
+                isError: false
+            };
+        case ActionType.FETCH_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                isError: false,
+                data: action.payload
+            };
+        case ActionType.FETCH_FAILURE:
+            return { ...state };
+        default:
+            throw new Error();
+    }
+}
 
 // データ取得専用のhookになった。
 export const useDataApi = (initialUrl: string, initialData: { hits: [] }) => {
@@ -11,9 +50,17 @@ export const useDataApi = (initialUrl: string, initialData: { hits: [] }) => {
     const [isLoading, setIsLodading] = useState(false)
     const [isError, setIsError] = useState(false)
 
+    const [state, dispatch] = useReducer(fadaFetchReducer, {
+        isLoading: false,
+        isError: false,
+        data: initialData
+    })
+
     useEffect(() => {
         console.log(url)
         const fetchData = async () => {
+
+            dispatch({ type: 'FETCH_INIT' })
             setIsError(false);
             setIsLodading(true)
             try {
@@ -21,6 +68,7 @@ export const useDataApi = (initialUrl: string, initialData: { hits: [] }) => {
                 setData(result.data)
             } catch (error) {
                 setIsError(true);
+                dispatch({ type: 'FETCH_FAILURE' });
             }
             setIsLodading(false)
         }
