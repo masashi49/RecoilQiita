@@ -92,7 +92,6 @@ export const useDataApi = (initialUrl: string, initialData: { hits: [] }) => {
             const start = performance.now();
             while (performance.now() - start < 1000);
         }
-
     }, [url])
 
 
