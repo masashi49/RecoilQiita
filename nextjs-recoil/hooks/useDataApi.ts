@@ -60,7 +60,7 @@ export const useDataApi = (initialUrl: string, initialData: { hits: [] }) => {
     })
 
     useEffect(() => {
-        console.log(url)
+        let didCancel = false;
         const fetchData = async () => {
 
             dispatch({ type: 'FETCH_INIT' })
@@ -71,7 +71,9 @@ export const useDataApi = (initialUrl: string, initialData: { hits: [] }) => {
                 setData(result.data)
             } catch (error) {
                 setIsError(true);
-                dispatch({ type: 'FETCH_FAILURE' });
+                if (!didCancel) {
+                    dispatch({ type: 'FETCH_FAILURE' });
+                }
             }
             setIsLodading(false)
         }
@@ -80,7 +82,7 @@ export const useDataApi = (initialUrl: string, initialData: { hits: [] }) => {
 
         // これはクリーンアップ関数
         return () => {
-
+            didCancel = true;
             console.log("bye!");
             run1sec();
         };
